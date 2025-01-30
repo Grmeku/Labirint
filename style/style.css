@@ -1,0 +1,17 @@
+*{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+body {
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    align-items: center;      /* Center vertically */
+    height: 100vh;            /* Full viewport height */
+    margin: 0;                /* Remove default margin */
+    background-color: #f0f0f0; /* Optional background */
+}
+canvas{
+    height:625px;
+    width: 625px;
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>Labirint</title>
+    <style>
+        /* Set background color of the whole document to alternating stripes */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                0deg,            /* Horizontal stripes */
+                #5c843f,         /* Light green (#5c843f) */
+                #5c843f 100px,   /* Stripe width (increased to 100px for larger stripes) */
+                #517c34 100px,   /* Dark green (#517c34) */
+                #517c34 200px    /* Stripe width (increased to 100px for larger stripes) */
+            );
+        }
+        
+        /* Remove margins for the canvas */
+        canvas {
+            display: block;  /* Remove extra space below the canvas */
+            margin: auto;    /* Center the canvas */
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+
+            // Get the device pixel ratio
+            var dpr = window.devicePixelRatio || 1;
+
+            // Set the actual canvas size (higher resolution)
+            canvas.width = 625 * dpr;  // Set canvas width to 625px
+            canvas.height = 625 * dpr; // Set canvas height to 625px
+
+            // Scale the drawing context
+            ctx.scale(dpr, dpr);
+
+            // Load the labyrinth image (SVG with walls to be changed to white)
+            var img = new Image();
+            img.src = "img/labirint.svg"; 
+
+            img.onload = function () {
+                ctx.drawImage(img, 0, 0, 625, 625); // Ensure proper sizing
+            };
+
+            // Load the ball image (zoga.svg)
+            var ball = new Image();
+            ball.src = "img/zoga.svg"; // Image of the ball
+
+            // Load the goal image (goal.svg)
+            var goal = new Image();
+            goal.src = "img/goal.svg"; // Image of the goal
+
+            // Coordinates for the path
+            const xCoords = [302, 302, 343, 343, 364, 364, 384, 384, 405, 405, 426, 426, 446, 446, 488, 488, 467, 467, 488, 488, 508, 508, 467, 467, 488, 488, 467, 467, 446, 446, 364, 364, 384, 384, 364, 364, 302, 302, 281, 281, 260, 260, 240, 240, 219, 219, 240, 240, 260, 260, 281, 281, 240, 240, 260, 260, 240, 240, 198, 198, 178, 178, 136, 136, 95, 95, 116, 116, 136, 136, 95, 95, 74, 74, 54, 54, 74, 74, 12, 12, 74, 74, 95, 95, 116, 116, 178, 178, 198, 198, 240, 240, 260, 260, 240, 240, 260, 260, 281, 281, 240, 240, 260, 260, 281, 281, 302, 302, 322, 322, 343, 343, 322, 322, 364, 364, 343, 343, 322, 322];
+            const yCoords = [2, 12, 12, 33, 33, 12, 12, 33, 33, 12, 12, 33, 33, 12, 12, 54, 54, 95, 95, 136, 136, 178, 178, 198, 198, 219, 219, 240, 240, 260, 260, 302, 302, 343, 343, 322, 322, 302, 302, 260, 260, 281, 281, 260, 260, 322, 322, 302, 302, 322, 322, 343, 343, 364, 364, 405, 405, 426, 426, 446, 446, 467, 467, 426, 426, 446, 446, 488, 488, 508, 508, 467, 467, 508, 508, 550, 550, 570, 570, 612, 612, 591, 591, 570, 570, 612, 612, 591, 591, 612, 612, 591, 591, 570, 570, 529, 529, 508, 508, 488, 488, 446, 446, 426, 426, 467, 467, 426, 426, 467, 467, 488, 488, 529, 529, 612, 612, 550, 550, 622];
+
+            var currentIndex = 0;
+            var ballX = xCoords[0];
+            var ballY = yCoords[0];
+            var targetX = xCoords[0];
+            var targetY = yCoords[0];
+            var speed = 0.05;  // Smooth transition speed (lower = slower)
+
+            // Set goal position just outside the labyrinth (adjusted)
+            var goalX = xCoords[xCoords.length - 1] - 21;  // Adjust goal to be 21px to the left of the exit
+            var goalY = yCoords[yCoords.length - 1] - 30;  // Adjust vertical position
+
+            // Calculate goal size (1.5x the original size)
+            var goalWidth = 45;  // 1.5 times the original width (adjust as needed)
+            var goalHeight = 45; // 1.5 times the original height (adjust as needed)
+
+            // Ball's animation function
+            function animateBall() {
+                if (currentIndex < xCoords.length - 1) {
+                    // Move ball gradually to the next coordinate
+                    targetX = xCoords[currentIndex + 1];
+                    targetY = yCoords[currentIndex + 1];
+
+                    // Interpolate between the current position and the target position
+                    var dx = targetX - ballX;
+                    var dy = targetY - ballY;
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // If the ball is close enough to the target, move to the next target
+                    if (distance < 1) {
+                        ballX = targetX;
+                        ballY = targetY;
+                        currentIndex++;
+                    } else {
+                        // Move the ball by a small step toward the target
+                        ballX += dx * speed;
+                        ballY += dy * speed;
+                    }
+
+                    // Clear the canvas and redraw the labyrinth
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.drawImage(img, 0, 0, 625, 625); // Redraw the labyrinth
+
+                    // Draw the goal just outside the labyrinth at the calculated position
+                    ctx.drawImage(goal, goalX, goalY, goalWidth, goalHeight);  // Drawing goal with adjusted size
+
+                    // Draw the ball at the new position
+                    ctx.drawImage(ball, ballX - 10, ballY - 10, 20, 20); // Adjust size if necessary
+
+                    // Request the next animation frame
+                    requestAnimationFrame(animateBall);
+                } else {
+                    // Ball has reached the goal
+                    console.log("Ball reached the goal!");
+                }
+            }
+
+            // Start the animation when the ball and goal images are loaded
+            ball.onload = function () {
+                goal.onload = function () {
+                    animateBall();
+                };
+            };
+        };
+    </script>
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+</body>
+</html>
