@@ -140,7 +140,7 @@
                 ballX = xCoordsEasy[0] || 0; // Start position for Easy (empty arrays)
                 ballY = yCoordsEasy[0] || 0;
                 ballVisible = true;
-                speed = 0.10; // Set speed for Easy maze
+                speed = 0.15; // Set speed for Easy maze
                 resetMazeAndStart();
             });
 
@@ -150,7 +150,7 @@
                 ballX = xCoordsMedium[0] || 0;
                 ballY = yCoordsMedium[0] || 0;
                 ballVisible = true;
-                speed = 0.10; // Set speed for Medium maze
+                speed = 0.15; // Set speed for Medium maze
 
                 // Update goal position to the last point of the medium maze
                 goalX = xCoordsMedium[xCoordsMedium.length - 1] - 21;  // Adjust the goal X position
@@ -165,7 +165,7 @@
                 ballX = xCoords[0];
                 ballY = yCoords[0];
                 ballVisible = true;
-                speed = 0.10; // Set speed for Hard maze
+                speed = 0.15; // Set speed for Hard maze
                 s
                 resetMazeAndStart();
             });
