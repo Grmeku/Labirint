@@ -27,7 +27,7 @@
         .title {
             width: 304px;
             height: 100px;
-            font-size: 18px; /* Keeping text readable */
+            font-size: 18px; 
             font-weight: bold;
             text-align: center;
             color: black;
@@ -43,9 +43,9 @@
             canvas.height = 625 * dpr;
             ctx.scale(dpr, dpr);
 
-            // Default maze (Hard)
+
             var img = new Image();
-            img.src = "img/labirint30.svg";  // labirint30.svg is the default maze
+            img.src = "img/labirint30.svg";  
             var ball = new Image();
             ball.src = "img/zoga.svg";
             var goal = new Image();
@@ -73,13 +73,13 @@
             function animateBall() {
                 var xCoordsCurrent, yCoordsCurrent;
                 
-                if (img.src.includes("labirint30.svg")) { // Hard maze
+                if (img.src.includes("labirint30.svg")) { 
                     xCoordsCurrent = xCoords;
                     yCoordsCurrent = yCoords;
-                } else if (img.src.includes("labirint25.svg")) { // Medium maze
+                } else if (img.src.includes("labirint25.svg")) { 
                     xCoordsCurrent = xCoordsMedium;
                     yCoordsCurrent = yCoordsMedium;
-                } else { // Easy maze
+                } else { 
                     xCoordsCurrent = xCoordsEasy;
                     yCoordsCurrent = yCoordsEasy;ćć
                 }
@@ -122,7 +122,6 @@
             let animationRequestId = null;
 
             function stopAnimation() {
-                // Cancel the ongoing animation frame if it exists
                 if (animationRequestId) {
                     cancelAnimationFrame(animationRequestId);
                     animationRequestId = null;
@@ -130,70 +129,70 @@
             }
 
             function resetMazeAndStart() {
-                // Stop any ongoing animation before starting a new one
+                
                 stopAnimation();
 
-                // Clear the canvas and redraw the maze and goal
+                
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, 625, 625); // Draw new maze
+                ctx.drawImage(img, 0, 0, 625, 625); 
                 ctx.drawImage(goal, goalX, goalY, goalWidth, goalHeight);
 
-                // Start the ball animation
+                
                 animateBall();
             }
 
-            // Event listeners to switch between difficulty levels
+            
             document.getElementById("easy").addEventListener("click", function () {
-                img.src = "img/labirint20.svg"; // Easy maze
+                img.src = "img/labirint20.svg"; 
                 currentIndex = 0;
-                ballX = xCoordsEasy[0] || 0; // Start position for Easy (empty arrays)
+                ballX = xCoordsEasy[0] || 0; 
                 ballY = yCoordsEasy[0] || 0;
                 ballVisible = true;
-                speed = 0.15; // Set speed for Easy maze
-                goalX = xCoordsEasy[xCoordsEasy.length - 1] - 21;  // Adjust the goal X position
-                goalY = yCoordsEasy[yCoordsEasy.length - 1] - 25;  // Adjust the goal Y position
+                speed = 0.15; 
+                goalX = xCoordsEasy[xCoordsEasy.length - 1] - 21;  
+                goalY = yCoordsEasy[yCoordsEasy.length - 1] - 25;  
                 resetMazeAndStart();
             });
 
             document.getElementById("medium").addEventListener("click", function () {
-                img.src = "img/labirint25.svg"; // Medium maze
+                img.src = "img/labirint25.svg"; 
                 currentIndex = 0;
                 ballX = xCoordsMedium[0] || 0;
                 ballY = yCoordsMedium[0] || 0;
                 ballVisible = true;
-                speed = 0.15; // Set speed for Medium maze
+                speed = 0.15; 
 
-                // Update goal position to the last point of the medium maze
-                goalX = xCoordsMedium[xCoordsMedium.length - 1] - 21;  // Adjust the goal X position
-                goalY = yCoordsMedium[yCoordsMedium.length - 1] - 30;  // Adjust the goal Y position
+
+                goalX = xCoordsMedium[xCoordsMedium.length - 1] - 21;  
+                goalY = yCoordsMedium[yCoordsMedium.length - 1] - 30;  
 
                 resetMazeAndStart();
             });
 
             document.getElementById("hard").addEventListener("click", function () {
-                img.src = "img/labirint30.svg"; // Hard maze
+                img.src = "img/labirint30.svg"; 
                 currentIndex = 0;
                 ballX = xCoords[0];
                 ballY = yCoords[0];
                 ballVisible = true;
-                speed = 0.15; // Set speed for Hard maze
-                goalX = xCoords[xCoords.length - 1] - 21;  // Adjust the goal X position
-                goalY = yCoords[yCoords.length - 1] - 30;  // Adjust the goal Y position
+                speed = 0.15; 
+                goalX = xCoords[xCoords.length - 1] - 21;  
+                goalY = yCoords[yCoords.length - 1] - 30;  
                 resetMazeAndStart();
             });
-            var sirenSound = new Audio("img/horn.mp3"); // Adjust the path if needed
-            // Main ball animation function
+            var sirenSound = new Audio("img/horn.mp3"); 
+
             function animateBall() {
                 var xCoordsCurrent, yCoordsCurrent;
                 
-                // Select correct maze coordinates
-                if (img.src.includes("labirint30.svg")) { // Hard maze
+                
+                if (img.src.includes("labirint30.svg")) { 
                     xCoordsCurrent = xCoords;
                     yCoordsCurrent = yCoords;
-                } else if (img.src.includes("labirint25.svg")) { // Medium maze
+                } else if (img.src.includes("labirint25.svg")) { 
                     xCoordsCurrent = xCoordsMedium;
                     yCoordsCurrent = yCoordsMedium;
-                } else { // Easy maze
+                } else { 
                     xCoordsCurrent = xCoordsEasy;
                     yCoordsCurrent = yCoordsEasy;
                 }
