@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    
+
     <title>Labirint</title>
     <style>
         body {
@@ -33,6 +33,14 @@
             color: black;
             margin-top:-70%;
         }
+        .animation {
+            position: absolute;
+            margin-left:750px;
+            margin-bottom:600px;
+            width: 70px;
+            height: 70px;
+        }
+
     </style>
     <script>
         window.onload = function () {
@@ -43,13 +51,22 @@
             canvas.height = 625 * dpr;
             ctx.scale(dpr, dpr);
 
+            document.getElementById("soccerKid1").style.display = "block";
 
+            // After 1 second, hide SoccerKid1 and show SoccerKid2
+            setTimeout(function() {
+                document.getElementById("soccerKid1").style.display = "none";
+                document.getElementById("soccerKid2").style.display = "block";
+            }, 1000); // 1000 milliseconds = 1 second
             var img = new Image();
             img.src = "img/labirint30.svg";  
             var ball = new Image();
             ball.src = "img/zoga.svg";
             var goal = new Image();
-            goal.src = "img/goal.svg";
+            goal.src = "img/goal.png";
+            var ballSprite = new Image();
+            ballSprite.src = "img/SoccerKid1.png"; // Make sure to replace with your actual sprite image path
+
 
             const xCoords = [302, 302, 343, 343, 364, 364, 384, 384, 405, 405, 426, 426, 446, 446, 488, 488, 467, 467, 488, 488, 508, 508, 467, 467, 488, 488, 467, 467, 446, 446, 364, 364, 384, 384, 364, 364, 302, 302, 281, 281, 260, 260, 240, 240, 219, 219, 240, 240, 260, 260, 281, 281, 240, 240, 260, 260, 240, 240, 198, 198, 178, 178, 136, 136, 95, 95, 116, 116, 136, 136, 95, 95, 74, 74, 54, 54, 74, 74, 12, 12, 74, 74, 95, 95, 116, 116, 178, 178, 198, 198, 240, 240, 260, 260, 240, 240, 260, 260, 281, 281, 240, 240, 260, 260, 281, 281, 302, 302, 322, 322, 343, 343, 322, 322, 364, 364, 343, 343, 322, 322];
             const yCoords = [2, 12, 12, 33, 33, 12, 12, 33, 33, 12, 12, 33, 33, 12, 12, 54, 54, 95, 95, 136, 136, 178, 178, 198, 198, 219, 219, 240, 240, 260, 260, 302, 302, 343, 343, 322, 322, 302, 302, 260, 260, 281, 281, 260, 260, 322, 322, 302, 302, 322, 322, 343, 343, 364, 364, 405, 405, 426, 426, 446, 446, 467, 467, 426, 426, 446, 446, 488, 488, 508, 508, 467, 467, 508, 508, 550, 550, 570, 570, 612, 612, 591, 591, 570, 570, 612, 612, 591, 591, 612, 612, 591, 591, 570, 570, 529, 529, 508, 508, 488, 488, 446, 446, 426, 426, 467, 467, 426, 426, 467, 467, 488, 488, 529, 529, 612, 612, 550, 550, 622];
@@ -64,59 +81,60 @@
             var ballX = xCoords[0];
             var ballY = yCoords[0];
             var speed = 0.10;
-            var goalX = xCoords[xCoords.length - 1] - 21;
-            var goalY = yCoords[yCoords.length - 1] - 30;
-            var goalWidth = 45;
-            var goalHeight = 45;
+            var goalX = xCoords[xCoords.length - 1] - 28;
+            var goalY = yCoords[yCoords.length - 1] - 20;
+            var goalWidth = 59;
+            var goalHeight = 36;
             var ballVisible = true;
-
             function animateBall() {
-                var xCoordsCurrent, yCoordsCurrent;
                 
-                if (img.src.includes("labirint30.svg")) { 
-                    xCoordsCurrent = xCoords;
-                    yCoordsCurrent = yCoords;
-                } else if (img.src.includes("labirint25.svg")) { 
-                    xCoordsCurrent = xCoordsMedium;
-                    yCoordsCurrent = yCoordsMedium;
-                } else { 
-                    xCoordsCurrent = xCoordsEasy;
-                    yCoordsCurrent = yCoordsEasy;ćć
-                }
-
-                if (currentIndex < xCoordsCurrent.length - 1) {
-                    var targetX = xCoordsCurrent[currentIndex + 1];
-                    var targetY = yCoordsCurrent[currentIndex + 1];
-                    var dx = targetX - ballX;
-                    var dy = targetY - ballY;
-                    var distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 1) {
-                        ballX = targetX;
-                        ballY = targetY;
-                        currentIndex++;
-                    } else {
-                        ballX += dx * speed;
-                        ballY += dy * speed;
+                    var xCoordsCurrent, yCoordsCurrent;
+                    
+                    if (img.src.includes("labirint30.svg")) { 
+                        xCoordsCurrent = xCoords;
+                        yCoordsCurrent = yCoords;
+                    } else if (img.src.includes("labirint25.svg")) { 
+                        xCoordsCurrent = xCoordsMedium;
+                        yCoordsCurrent = yCoordsMedium;
+                    } else { 
+                        xCoordsCurrent = xCoordsEasy;
+                        yCoordsCurrent = yCoordsEasy;ćć
                     }
 
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0, 625, 625);
-                    ctx.drawImage(goal, goalX, goalY, goalWidth, goalHeight);
+                    if (currentIndex < xCoordsCurrent.length - 1) {
+                        var targetX = xCoordsCurrent[currentIndex + 1];
+                        var targetY = yCoordsCurrent[currentIndex + 1];
+                        var dx = targetX - ballX;
+                        var dy = targetY - ballY;
+                        var distance = Math.sqrt(dx * dx + dy * dy);
 
-                    if (ballVisible) {
-                        ctx.drawImage(ball, ballX - 8, ballY - 8, 16, 16);
-                        requestAnimationFrame(animateBall);
-                    }
-                } else {
-                    console.log("Ball reached the goal!");
-                    ballVisible = false;
-                    setTimeout(() => {
+                        if (distance < 1) {
+                            ballX = targetX;
+                            ballY = targetY;
+                            currentIndex++;
+                        } else {
+                            ballX += dx * speed;
+                            ballY += dy * speed;
+                        }
+
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, 625, 625);
                         ctx.drawImage(goal, goalX, goalY, goalWidth, goalHeight);
-                    }, 10);
-                }
+
+                        if (ballVisible) {
+                            ctx.drawImage(ball, ballX - 8, ballY - 8, 16, 16);
+                            requestAnimationFrame(animateBall);
+                        }
+                    } else {
+                        console.log("Ball reached the goal!");
+                        ballVisible = false;
+                        setTimeout(() => {
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(img, 0, 0, 625, 625);
+                            ctx.drawImage(goal, goalX, goalY, goalWidth, goalHeight);
+                        }, 10);
+                    }
+                
             }
 
             let animationRequestId = null;
@@ -148,9 +166,9 @@
                 ballX = xCoordsEasy[0] || 0; 
                 ballY = yCoordsEasy[0] || 0;
                 ballVisible = true;
-                speed = 0.15; 
-                goalX = xCoordsEasy[xCoordsEasy.length - 1] - 21;  
-                goalY = yCoordsEasy[yCoordsEasy.length - 1] - 25;  
+                speed = 0.10; 
+                goalX = xCoordsEasy[xCoordsEasy.length - 1] - 30;  
+                goalY = yCoordsEasy[yCoordsEasy.length - 1] - 16;  
                 resetMazeAndStart();
             });
 
@@ -163,8 +181,8 @@
                 speed = 0.15; 
 
 
-                goalX = xCoordsMedium[xCoordsMedium.length - 1] - 21;  
-                goalY = yCoordsMedium[yCoordsMedium.length - 1] - 30;  
+                goalX = xCoordsMedium[xCoordsMedium.length - 1] - 27;  
+                goalY = yCoordsMedium[yCoordsMedium.length - 1] - 20;  
 
                 resetMazeAndStart();
             });
@@ -175,9 +193,9 @@
                 ballX = xCoords[0];
                 ballY = yCoords[0];
                 ballVisible = true;
-                speed = 0.15; 
-                goalX = xCoords[xCoords.length - 1] - 21;  
-                goalY = yCoords[yCoords.length - 1] - 30;  
+                speed = 0.20; 
+                goalX = xCoords[xCoords.length - 1] - 28;  
+                goalY = yCoords[yCoords.length - 1] - 20;  
                 resetMazeAndStart();
             });
             var sirenSound = new Audio("img/horn.mp3"); 
@@ -236,18 +254,23 @@
             ball.onload = function () {
                 goal.onload = function () {
                     animateBall();
-                };
+                }
             };
         };
     </script>
        
 </head>
 <body>
+    <div class="animation">
+        <img id="soccerKid1" src="img/SoccerKid1.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: block;" />
+        <img id="soccerKid2" src="img/SoccerKid2.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;" />
+        </div>
     <div class="labirint" style="margin-top:100px;">
         <canvas id="myCanvas"></canvas>
-    </div>    
+        
+    </div>
     <div class="sidebar" style="margin-top:100px;">
-        <div class="title">FOOTBALL</div>
+        <div class="title">FOOTBALL MAZE</div>
         <div class="difficulty" id="easy" style="margin-top: 20%;">Easy</div>
         <div class="difficulty" id="medium">Medium</div>
         <div class="difficulty" id="hard">Hard</div>
